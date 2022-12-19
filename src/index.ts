@@ -5,7 +5,7 @@ import { createExpressServer } from "routing-controllers";
 import logger from "./logger.js";
 
 // Controllers
-import { ParticipanteController } from "./ParticipanteController.js";
+import { ParticipanteController } from "./controller/ParticipanteController.js";
 
 // Inicializar banco de dados
 import { init as dbInit } from "./database/Database.js";
