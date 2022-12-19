@@ -1,0 +1,25 @@
+{
+  "name": "br.org.faculdadesdaindustria.vestibular.backend",
+  "version": "0.0.1",
+  "author": "Lucas Vinicius de Bortoli Santos",
+  "type": "module",
+  "scripts": {
+    "build": "tsc && cp -r src/database/migrations build/database/migrations"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.19.2",
+    "@types/express": "^4.17.15",
+    "@types/multer": "^1.4.7",
+    "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "express": "^4.18.2",
+    "multer": "^1.4.5-lts.1",
+    "pino": "^8.8.0",
+    "reflect-metadata": "^0.1.13",
+    "routing-controllers": "^0.10.0",
+    "sqlite": "^4.1.2",
+    "sqlite3": "^5.1.4"
+  }
+}
