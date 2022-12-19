@@ -13,6 +13,7 @@ import { init as dbInit } from "./database/Database.js";
 import getAuthorizationManager from "./auth/AuthorizationManager.js";
 
 const app = createExpressServer({
+  cors: true,
   routePrefix: "/api",
   controllers: [ParticipanteController, RestritoController],
   authorizationChecker: async (action: Action, roles: string[]) => {
