@@ -25,6 +25,15 @@ CREATE TABLE participante (
   FOREIGN KEY (cursoId) REFERENCES curso (id)
 );
 
+CREATE TABLE usuario (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  nome VARCHAR(64) NOT NULL,
+  roles TEXT NOT NULL,
+  username VARCHAR(32) UNIQUE NOT NULL,
+  hash_senha TEXT NOT NULL,
+  senha_salt TEXT NOT NULL
+);
+
 --------------------------------------------------------------------------------
 -- Down
 --------------------------------------------------------------------------------
@@ -33,3 +42,5 @@ DROP TABLE participante;
 DROP TABLE curso;
 
 DROP TABLE campus;
+
+DROP TABLE usuario;

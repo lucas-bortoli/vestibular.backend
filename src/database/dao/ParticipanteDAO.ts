@@ -1,5 +1,5 @@
-import getDatabase from "./Database.js";
-import Participante from "./model/Participante.js";
+import getDatabase from "../Database.js";
+import Participante from "../model/Participante.js";
 
 export class ParticipanteDAO {
   /**

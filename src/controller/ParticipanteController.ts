@@ -1,6 +1,6 @@
 import { BadRequestError, Body, JsonController, Post, UseBefore } from "routing-controllers";
 import Participante, { ParticipanteSchema } from "../database/model/Participante.js";
-import { ParticipanteDAO } from "../database/Participante.js";
+import { ParticipanteDAO } from "../database/dao/ParticipanteDAO.js";
 import { LoggerMiddleware } from "../middleware/LoggerMiddleware.js";
 
 @JsonController("/participante")
