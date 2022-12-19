@@ -2,13 +2,13 @@
 import "reflect-metadata";
 
 import { Action, createExpressServer } from "routing-controllers";
-import logger from "./logger.js";
+import { static as expressStatic } from "express";
 
 // Controllers
 import { ParticipanteController } from "./controller/ParticipanteController.js";
 import { RestritoController } from "./controller/RestritoController.js";
 
-// Inicializar banco de dados
+import logger from "./logger.js";
 import { init as dbInit } from "./database/Database.js";
 import getAuthorizationManager from "./auth/AuthorizationManager.js";
 
@@ -24,14 +24,12 @@ const app = createExpressServer({
       const authManager = getAuthorizationManager();
       const user = authManager.getAuthenticatedUserByToken(token);
 
-      logger.info(user);
+      logger.info("Usuário do token:", user);
 
       if (user === null) {
         // Usuário não está autenticado.
         return false;
       }
-
-      logger.info(roles);
 
       // Verificar roles requisitados
       for (const role of roles) {
@@ -52,6 +50,7 @@ const app = createExpressServer({
 });
 
 dbInit().then(() => {
+  app.use(expressStatic("public"));
   app.listen(8000);
 
   logger.info(`Servidor iniciado na porta :8000`);
