@@ -20,17 +20,17 @@ export class AuthorizationManager {
       return null;
     }
 
+    if (dbUser.hash_senha !== this.hashPassword(password, dbUser.senha_salt)) {
+      // Autenticação falhou, a senha não bate
+      return null;
+    }
+
     // Verificar se já existe uma sessão para este usuário
     for (const [token, user] of this.currentUsers.entries()) {
       if (dbUser.id === user.userId) {
         // Já existe, retornar a sessão atual
         return user;
       }
-    }
-
-    if (dbUser.hash_senha !== this.hashPassword(password, dbUser.senha_salt)) {
-      // Autenticação falhou, a senha não bate
-      return null;
     }
 
     const token = this.generateToken();

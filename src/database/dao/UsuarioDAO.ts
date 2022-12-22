@@ -1,7 +1,48 @@
+import assert from "node:assert";
+
 import getDatabase from "../Database.js";
 import Usuario from "../model/Usuario.js";
 
 export class UsuarioDAO {
+  /**
+   * Converte uma linha de uma query "SELECT *" para um model de Usuario.
+   */
+  private rowToModel(row: any): Usuario {
+    console.log(row);
+    assert(typeof row.id === "number");
+    assert(typeof row.nome === "string");
+    assert(typeof row.roles === "string");
+    assert(typeof row.username === "string");
+    assert(typeof row.hash_senha === "string");
+    assert(typeof row.senha_salt === "string");
+
+    return {
+      id: row.id,
+      nome: row.nome,
+      roles: row.roles.split(","),
+      username: row.username,
+      hash_senha: row.hash_senha,
+      senha_salt: row.senha_salt,
+    };
+  }
+
+  /**
+   * Retorna um usuário pelo seu id, ou null se não encontrado.
+   * @returns O usuário, se existir, ou `null`.
+   */
+  async getById(id: number): Promise<Usuario | null> {
+    const db = getDatabase();
+
+    const stmt = await db.prepare(`SELECT * FROM usuario WHERE id = ?`, [id]);
+    const row = await stmt.get();
+
+    if (row) {
+      return this.rowToModel(row);
+    } else {
+      return null;
+    }
+  }
+
   /**
    * Retorna um usuário pelo seu username, ou null se não encontrado.
    * @returns O usuário, se existir, ou `null`.
@@ -13,14 +54,7 @@ export class UsuarioDAO {
     const row = await stmt.get();
 
     if (row) {
-      return {
-        id: row.id,
-        nome: row.nome,
-        roles: row.roles.split(","),
-        username: row.username,
-        hash_senha: row.hash_senha,
-        senha_salt: row.senha_salt,
-      };
+      return this.rowToModel(row);
     } else {
       return null;
     }

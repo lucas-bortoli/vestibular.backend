@@ -1,7 +1,33 @@
+import assert from "node:assert";
 import getDatabase from "../Database.js";
 import Participante from "../model/Participante.js";
 
 export class ParticipanteDAO {
+  /**
+   * Converte uma linha de uma query "SELECT *" para um model de Participante.
+   */
+  private rowToModel(row: any): Participante {
+    assert(typeof row.id === "number");
+    assert(typeof row.nome === "string");
+    assert(typeof row.cpf === "string");
+    assert(typeof row.dataNascimento === "string");
+    assert(typeof row.email === "string");
+    assert(typeof row.provaOnline === "boolean");
+    assert(typeof row.telefone === "string");
+    assert(typeof row.cursoId === "number");
+
+    return {
+      id: row.id,
+      nome: row.nome,
+      cpf: row.cpf,
+      dataNascimento: row.dataNascimento,
+      email: row.email,
+      provaOnline: row.provaOnline,
+      telefone: row.telefone,
+      cursoId: row.cursoId,
+    };
+  }
+
   /**
    * Retorna um participante pelo seu id, ou null se não encontrado.
    * @param id Id do participante
@@ -14,19 +40,20 @@ export class ParticipanteDAO {
     const row = await stmt.get();
 
     if (row) {
-      return {
-        id: row.id,
-        nome: row.nome,
-        cpf: row.cpf,
-        dataNascimento: row.dataNascimento,
-        email: row.email,
-        provaOnline: row.provaOnline,
-        telefone: row.telefone,
-        cursoId: row.cursoId,
-      };
+      return this.rowToModel(row);
     } else {
       return null;
     }
+  }
+
+  /**
+   * Retorna todos os objetos cadastrados na tabela.
+   */
+  async getAll(): Promise<Participante[]> {
+    const stmt = await getDatabase().prepare(`SELECT * FROM participante`);
+    const rows = await stmt.all();
+
+    return rows.map((row) => this.rowToModel(row));
   }
 
   /**
