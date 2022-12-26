@@ -12,7 +12,7 @@ export class ParticipanteDAO {
     assert(typeof row.cpf === "string");
     assert(typeof row.dataNascimento === "string");
     assert(typeof row.email === "string");
-    assert(typeof row.provaOnline === "boolean");
+    assert(typeof row.provaOnline === "number");
     assert(typeof row.telefone === "string");
     assert(typeof row.cursoId === "number");
 
@@ -22,7 +22,7 @@ export class ParticipanteDAO {
       cpf: row.cpf,
       dataNascimento: row.dataNascimento,
       email: row.email,
-      provaOnline: row.provaOnline,
+      provaOnline: row.provaOnline !== 0,
       telefone: row.telefone,
       cursoId: row.cursoId,
     };
@@ -39,11 +39,25 @@ export class ParticipanteDAO {
     const stmt = await db.prepare(`SELECT * FROM participante WHERE id = ?`, [id]);
     const row = await stmt.get();
 
-    if (row) {
-      return this.rowToModel(row);
-    } else {
-      return null;
-    }
+    return row ? this.rowToModel(row) : null;
+  }
+
+  /**
+   * Retorna um participante pelo seu cpf e data de nascimento.
+   * @param birth deve estar em formato YYYY-MM-DD
+   */
+  async getByCpfAndBirthDate(cpf: string, birth: string): Promise<Participante | null> {
+    // Remover caracteres não numéricos
+    cpf = cpf.replace(/[^\d]/g, "");
+
+    const stmt = await getDatabase().prepare(
+      `SELECT * FROM participante WHERE cpf = ? and dataNascimento = ?`,
+      [cpf, birth]
+    );
+
+    const row = await stmt.get();
+
+    return row ? this.rowToModel(row) : null;
   }
 
   /**
