@@ -38,11 +38,36 @@ INSERT INTO
     usuario (nome, roles, username, hash_senha, senha_salt)
 VALUES
     (
-        "usuário padrão",
-        "Admin",
-        "root",
-        "961eeaa0a0ffc1cf292d0468c3c3e8997c9d2849de98b75a7699171f7507b611e7e7523eac04a64d4d25154c9fb5c44825cbf198373aed99da8c4b3d7b54eb6c",
-        "cb20724e9c8a414c30106a8a8b6b1432"
+        'usuário padrão',
+        'Admin',
+        'root',
+        '961eeaa0a0ffc1cf292d0468c3c3e8997c9d2849de98b75a7699171f7507b611e7e7523eac04a64d4d25154c9fb5c44825cbf198373aed99da8c4b3d7b54eb6c',
+        'cb20724e9c8a414c30106a8a8b6b1432'
+    );
+
+INSERT INTO
+    config (
+        processoSeletivoInicioUnix,
+        processoSeletivoFimUnix,
+        processoSeletivoDescricaoHtml,
+        smtpHost,
+        smtpPort,
+        smtpUser,
+        smtpPassword,
+        smtpSecure,
+        smtpSenderAddress
+    )
+VALUES
+    (
+        1672171925076,
+        1672179139992,
+        '<h1>Configurar aplicação</h1><p>A aplicação não está configurada devidamente.</p>',
+        'smtp.ethereal.email',
+        587,
+        'letha.stiedemann31@ethereal.email',
+        'Bb8JksVvw6QtQVDrme',
+        1,
+        'letha.stiedemann31@ethereal.email'
     );
 
 --------------------------------------------------------------------------------
@@ -51,5 +76,10 @@ VALUES
 DELETE FROM
     usuario
 WHERE
-    username = "root"
-    AND senha = "961eeaa0a0ffc1cf292d0468c3c3e8997c9d2849de98b75a7699171f7507b611e7e7523eac04a64d4d25154c9fb5c44825cbf198373aed99da8c4b3d7b54eb6c";
+    username = 'root'
+    AND senha = '961eeaa0a0ffc1cf292d0468c3c3e8997c9d2849de98b75a7699171f7507b611e7e7523eac04a64d4d25154c9fb5c44825cbf198373aed99da8c4b3d7b54eb6c';
+
+DELETE FROM
+    config
+WHERE
+    smtpUser = 'letha.stiedemann31@ethereal.email';

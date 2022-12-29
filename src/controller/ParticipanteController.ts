@@ -3,6 +3,8 @@ import Participante, { ParticipanteSchema } from "../database/model/Participante
 import { ParticipanteDAO } from "../database/dao/ParticipanteDAO.js";
 import { LoggerMiddleware } from "../middleware/LoggerMiddleware.js";
 import assert from "node:assert";
+import { Mail } from "../mail.js";
+import logger from "../logger.js";
 
 interface ParticipanteLoginRequestBody {
   cpf: string;
@@ -28,7 +30,16 @@ export class ParticipanteController {
     const id = await pDAO.insert(value);
 
     // Retornar a interface Participantes
-    return await pDAO.getById(id);
+    const dbParticipante = await pDAO.getById(id);
+
+    // Enviar e-mail de confirmação assíncronamente
+    const sentMail = new Mail().sendRegisterMail(participante.email, { name: participante.nome });
+
+    sentMail.catch((error) => {
+      logger.error("Erro ao enviar e-mail", error);
+    });
+
+    return dbParticipante;
   }
 
   /**

@@ -34,6 +34,19 @@ CREATE TABLE usuario (
   senha_salt TEXT NOT NULL
 );
 
+CREATE TABLE config (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  processoSeletivoInicioUnix BIGINT NOT NULL,
+  processoSeletivoFimUnix BIGINT NOT NULL,
+  processoSeletivoDescricaoHtml TEXT NOT NULL,
+  smtpHost TEXT NOT NULL,
+  smtpPort INTEGER NOT NULL,
+  smtpUser TEXT NOT NULL,
+  smtpPassword TEXT NOT NULL,
+  smtpSecure BOOLEAN NOT NULL,
+  smtpSenderAddress TEXT NOT NULL
+);
+
 --------------------------------------------------------------------------------
 -- Down
 --------------------------------------------------------------------------------
@@ -44,3 +57,5 @@ DROP TABLE curso;
 DROP TABLE campus;
 
 DROP TABLE usuario;
+
+DROP TABLE config;
