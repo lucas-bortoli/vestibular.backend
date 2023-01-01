@@ -1,4 +1,4 @@
-export interface Curso {
+export interface CursoModel {
   /**
    * Id do curso
    */

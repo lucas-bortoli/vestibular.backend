@@ -1,5 +1,5 @@
 import { BadRequestError, Body, JsonController, Post, UseBefore } from "routing-controllers";
-import Participante, { ParticipanteSchema } from "../database/model/Participante.js";
+import Participante, { ParticipanteSchema } from "../database/model/ParticipanteModel.js";
 import { ParticipanteDAO } from "../database/dao/ParticipanteDAO.js";
 import { LoggerMiddleware } from "../middleware/LoggerMiddleware.js";
 import assert from "node:assert";

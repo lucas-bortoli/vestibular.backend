@@ -4,7 +4,7 @@ import { AuthorizationRolesType } from "../../auth/Roles.js";
  * Importante notar: Um Usuário NÃO é um Participante.
  * Usuários são administradores do site, ou são staff.
  */
-export default interface Usuario {
+export default interface UsuarioModel {
   /**
    * Id do usuário
    */

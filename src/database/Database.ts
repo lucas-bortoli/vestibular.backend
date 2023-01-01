@@ -17,7 +17,7 @@ export const init = async (): Promise<Database> => {
   logger.info("Inicializando banco de dados...");
 
   $db = await open({
-    filename: "/data/db.sqlite",
+    filename: "db.sqlite",
     driver: sqlite3.Database,
   });
 

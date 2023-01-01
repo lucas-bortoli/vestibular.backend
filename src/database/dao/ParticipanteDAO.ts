@@ -1,6 +1,6 @@
 import assert from "node:assert";
 import getDatabase from "../Database.js";
-import Participante from "../model/Participante.js";
+import Participante from "../model/ParticipanteModel.js";
 
 export class ParticipanteDAO {
   /**

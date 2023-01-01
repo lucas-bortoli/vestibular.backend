@@ -1,11 +1,11 @@
 import getDatabase from "../Database.js";
-import { Config } from "../model/Config.js";
+import ConfigModel from "../model/ConfigModel.js";
 
 export class ConfigDAO {
   /**
    * Recebe as configurações da aplicação
    */
-  async getConfig(): Promise<Config> {
+  async getConfig(): Promise<ConfigModel> {
     const stmt = await getDatabase().prepare("SELECT * FROM config ORDER BY id DESC LIMIT 1");
     const row = await stmt.get();
 
@@ -27,7 +27,7 @@ export class ConfigDAO {
   /**
    * Salva as configurações da aplicação
    */
-  async setConfig(config: Config) {
+  async setConfig(config: ConfigModel) {
     const stmt = await getDatabase().prepare(
       `INSERT INTO
         config (

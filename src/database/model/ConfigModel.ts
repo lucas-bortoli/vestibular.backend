@@ -1,4 +1,4 @@
-export interface Config {
+export default interface ConfigModel {
   /**
    * Quando o processo seletivo está iniciado.
    * Só serão aceitas entregas de provas onlines depois desse período.

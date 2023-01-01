@@ -1,7 +1,7 @@
 import assert from "node:assert";
 
 import getDatabase from "../Database.js";
-import Usuario from "../model/Usuario.js";
+import Usuario from "../model/UsuarioModel.js";
 
 export class UsuarioDAO {
   /**

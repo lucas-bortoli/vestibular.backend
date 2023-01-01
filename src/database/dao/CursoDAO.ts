@@ -1,5 +1,6 @@
 import getDatabase from "../Database.js";
-import { CursoCampusJoin } from "../model/Curso.js";
+import { CampusModel } from "../model/CampusModel.js";
+import { CursoCampusJoin } from "../model/CursoModel.js";
 
 export class CursoDAO {
   /**
@@ -27,6 +28,20 @@ export class CursoDAO {
         cursoNome: row.cursoNome,
         campusId: row.campusId,
         campusNome: row.campusNome,
+      };
+    });
+  }
+
+  /**
+   * Retorna todos os campus cadastrados na aplicação.
+   */
+  async getAllCampus(): Promise<CampusModel[]> {
+    const stmt = await getDatabase().all("SELECT * FROM campus");
+
+    return stmt.map((row) => {
+      return {
+        id: row.id,
+        nome: row.nome,
       };
     });
   }

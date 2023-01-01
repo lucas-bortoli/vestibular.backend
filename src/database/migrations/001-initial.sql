@@ -34,6 +34,21 @@ CREATE TABLE usuario (
   senha_salt TEXT NOT NULL
 );
 
+CREATE TABLE notas (
+  participanteId INTEGER PRIMARY KEY,
+  notas TEXT NOT NULL,
+  FOREIGN KEY (participanteId) REFERENCES participante (id)
+);
+
+CREATE TABLE redacoes (
+  participanteId INTEGER PRIMARY KEY,
+  corpo TEXT NOT NULL,
+  inicioTimestamp BIGINT NOT NULL,
+  fimTimestamp BIGINT NOT NULL,
+  concluido BOOLEAN NOT NULL,
+  FOREIGN KEY (participanteId) REFERENCES participante (id)
+);
+
 CREATE TABLE config (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   processoSeletivoInicioUnix BIGINT NOT NULL,
@@ -50,6 +65,8 @@ CREATE TABLE config (
 --------------------------------------------------------------------------------
 -- Down
 --------------------------------------------------------------------------------
+DROP TABLE notas;
+
 DROP TABLE participante;
 
 DROP TABLE curso;

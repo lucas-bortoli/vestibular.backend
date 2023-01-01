@@ -1,7 +1,7 @@
 import Joi from "joi";
 import { cpf as cpfValidator } from "cpf-cnpj-validator";
 
-export default interface Participante {
+export default interface ParticipanteModel {
   /**
    * Id do participante
    */

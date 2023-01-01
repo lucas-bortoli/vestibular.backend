@@ -1,4 +1,4 @@
-export interface Campus {
+export interface CampusModel {
   /**
    * Id do campus
    */

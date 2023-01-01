@@ -8,9 +8,10 @@ import {
   UseBefore,
 } from "routing-controllers";
 import getAuthorizationManager from "../auth/AuthorizationManager.js";
+import { NotasDAO } from "../database/dao/NotasDAO.js";
 import { ParticipanteDAO } from "../database/dao/ParticipanteDAO.js";
 import { UsuarioDAO } from "../database/dao/UsuarioDAO.js";
-import Usuario from "../database/model/Usuario.js";
+import Usuario from "../database/model/UsuarioModel.js";
 
 import { LoggerMiddleware } from "../middleware/LoggerMiddleware.js";
 
@@ -22,6 +23,10 @@ interface LoginRequestBody {
 @JsonController("/restrito")
 @UseBefore(LoggerMiddleware)
 export class RestritoController {
+  /**
+   * Faz o login no sistema restrito. Gera um token de autorização e dá ao cliente,
+   * este token sendo necessário para todas as outras operações neste controller.
+   */
   @Post("/login")
   async login(@Body() body: LoginRequestBody) {
     const username = "" + body.username;
@@ -44,6 +49,9 @@ export class RestritoController {
     };
   }
 
+  /**
+   * Retorna uma lista com todos os participantes cadastrados no sistema.
+   */
   @Get("/participantes")
   @Authorized()
   async listarParticipantes() {
@@ -51,5 +59,16 @@ export class RestritoController {
     const participantes = await pDAO.getAll();
 
     return participantes;
+  }
+
+  /**
+   * Lista todas as notas lançadas no sistema.
+   */
+  @Get("/notas")
+  @Authorized()
+  async listarNotas() {
+    const nDAO = new NotasDAO();
+
+    return await nDAO.getAll();
   }
 }

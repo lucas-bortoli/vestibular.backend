@@ -9,4 +9,10 @@ export class CursoController {
     const cursoDAO = new CursoDAO();
     return await cursoDAO.getCourses();
   }
+
+  @Get("/listCampus")
+  async listCampus() {
+    const cursoDAO = new CursoDAO();
+    return await cursoDAO.getAllCampus();
+  }
 }
