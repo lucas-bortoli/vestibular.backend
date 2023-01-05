@@ -12,6 +12,11 @@ export default interface ConfigModel {
   processoSeletivoFimUnix: number;
 
   /**
+   * Quanto tempo há para a conclusão de uma redação
+   */
+  redacaoTempo: number;
+
+  /**
    * Descrição do processo seletivo. Mostrado na página principal da aplicação, na sidebar.
    */
   processoSeletivoDescricaoHtml: string;

@@ -16,6 +16,10 @@ export class NotasDAO {
       .map((v: string) => parseInt(v))
       .map((v: number) => (isNaN(v) ? 0 : v));
 
+    for (let i = 0; i <= 2; i++) {
+      notas[i] = notas[i] ?? 0;
+    }
+
     return {
       participanteId: row.participanteId,
       notas,
@@ -52,6 +56,10 @@ export class NotasDAO {
    * @param notas Notas do participante
    */
   async setNotas(participanteId: number, notas: number[]): Promise<void> {
+    for (let i = 0; i <= 2; i++) {
+      notas[i] = notas[i] ?? 0;
+    }
+
     const notasText = notas.map((v) => (isNaN(v) ? 0 : v)).join(";");
 
     const db = getDatabase();

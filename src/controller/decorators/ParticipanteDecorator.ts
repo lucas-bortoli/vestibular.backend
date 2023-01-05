@@ -1,15 +1,14 @@
 import { createParamDecorator } from "routing-controllers";
-import { ParticipanteDAO } from "../../database/dao/ParticipanteDAO";
+import { ParticipanteDAO } from "../../database/dao/ParticipanteDAO.js";
 
 export function Participante() {
   return createParamDecorator({
-    required: true,
-    value: (action) => {
+    value: async (action) => {
       const pDAO = new ParticipanteDAO();
       const encodedField = action.request.headers["x-authorization"];
 
       if (typeof encodedField !== "string") {
-        return null;
+        throw new Error("Participante não existe.");
       }
 
       /**
@@ -23,7 +22,13 @@ export function Participante() {
         .split(":")
         .map((field) => Buffer.from(field, "base64").toString("utf-8"));
 
-      return pDAO.getByCpfAndBirthDate(decoded[0], decoded[1]);
+      const participante = await pDAO.getByCpfAndBirthDate(decoded[0], decoded[1]);
+
+      if (participante === null) {
+        throw new Error("Participante não existe.");
+      }
+
+      return participante;
     },
   });
 }

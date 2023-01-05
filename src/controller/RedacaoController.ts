@@ -1,10 +1,11 @@
-import { Body, Get, JsonController, OnNull, Post } from "routing-controllers";
+import { Body, Get, JsonController, OnNull, Post, UseBefore } from "routing-controllers";
 import assert from "node:assert";
-import { Participante } from "./decorators/ParticipanteDecorator";
-import ParticipanteModel from "../database/model/ParticipanteModel";
-import { RedacaoDAO } from "../database/dao/RedacaoDAO";
-import { ConfigDAO } from "../database/dao/ConfigDAO";
-import dateInRange from "../utils/dateInRange";
+import { Participante } from "./decorators/ParticipanteDecorator.js";
+import ParticipanteModel from "../database/model/ParticipanteModel.js";
+import { LoggerMiddleware } from "../middleware/LoggerMiddleware.js";
+import { RedacaoDAO } from "../database/dao/RedacaoDAO.js";
+import { ConfigDAO } from "../database/dao/ConfigDAO.js";
+import dateInRange from "../utils/dateInRange.js";
 
 interface RedacaoAtualizarBody {
   corpo: string;
@@ -25,21 +26,24 @@ const verificarProcessoSeletivoAberto = async () => {
  * Controlador das redações.
  */
 @JsonController("/participante/redacao")
+@UseBefore(LoggerMiddleware)
 export class RedacaoController {
   /**
    * Inicia o processo de escrita da redação.
    * @param participante O participante atual.
    */
-  @Post("iniciar")
+  @Post("/iniciar")
   public async iniciarRedacao(@Participante() participante: ParticipanteModel) {
     await verificarProcessoSeletivoAberto();
 
-    const dao = new RedacaoDAO();
-    const redacaoExistente = dao.getByParticipanteId(participante.id);
+    assert(participante.provaOnline, "Você está inscrito na modalidade presencial da prova.");
 
-    if (redacaoExistente !== null) {
-      throw new Error("Redação em progresso.");
-    }
+    const dao = new RedacaoDAO();
+    const redacaoExistente = await dao.getByParticipanteId(participante.id);
+    console.log("redacaoExistente", redacaoExistente);
+    assert(redacaoExistente === null, "Redação já está em progresso.");
+
+    const config = await getConfig();
 
     return await dao.insertOrUpdate({
       participanteId: participante.id,
@@ -47,6 +51,7 @@ export class RedacaoController {
       inicioTimestamp: Date.now(),
       fimTimestamp: Date.now(),
       concluido: false,
+      tempoRestante: config.redacaoTempo,
     });
   }
 
@@ -55,23 +60,23 @@ export class RedacaoController {
    * Contém o corpo atual da redação. Esse método atualiza o "fimTimestamp" da redação,
    * mesmo que ela não esteja concluída.
    */
-  @Post("atualizar")
+  @Post("/atualizar")
   public async atualizarRedacao(
     @Participante() participante: ParticipanteModel,
     @Body() body: RedacaoAtualizarBody
   ) {
     await verificarProcessoSeletivoAberto();
 
-    assert(typeof body.corpo === "string");
+    assert(typeof body.corpo === "string", "Parâmetro corpo inválido ou não existe.");
 
     const dao = new RedacaoDAO();
     const redacao = await dao.getByParticipanteId(participante.id);
 
-    // Verificar se há uma redação em progresso
-    assert(redacao !== null);
+    // Verificar se há uma redação em progresso e se não está concluída ainda
+    assert(redacao !== null, "Redação não existe.");
+    assert(!redacao.concluido, "Redação já concluída.");
 
-    // Verificar se não está concluída ainda
-    assert(!redacao.concluido);
+    const config = await getConfig();
 
     // Atualizar redação
     return await dao.insertOrUpdate({
@@ -80,6 +85,7 @@ export class RedacaoController {
       participanteId: redacao.participanteId,
       inicioTimestamp: redacao.inicioTimestamp,
       concluido: false,
+      tempoRestante: config.redacaoTempo - (Date.now() - redacao.inicioTimestamp),
     });
   }
 
@@ -88,14 +94,17 @@ export class RedacaoController {
    * @param participante
    * @returns
    */
-  @Post("concluir")
+  @Post("/concluir")
   public async concluirRedacao(@Participante() participante: ParticipanteModel) {
     await verificarProcessoSeletivoAberto();
 
     const dao = new RedacaoDAO();
     const redacao = await dao.getByParticipanteId(participante.id);
 
-    assert(redacao !== null);
+    assert(redacao !== null, "Redação não existe.");
+    assert(!redacao.concluido, "Redação já concluída.");
+
+    const config = await getConfig();
 
     return await dao.insertOrUpdate({
       concluido: true,
@@ -103,16 +112,17 @@ export class RedacaoController {
       participanteId: redacao.participanteId,
       inicioTimestamp: redacao.inicioTimestamp,
       corpo: redacao.corpo,
+      tempoRestante: config.redacaoTempo - (Date.now() - redacao.inicioTimestamp),
     });
   }
 
-  @Get()
-  @OnNull(404)
+  /**
+   * Retorna a redação do participante, ou "null" se não existir.
+   */
+  @Get("/atual")
   public async retornarRedacao(@Participante() participante: ParticipanteModel) {
     const dao = new RedacaoDAO();
     const redacao = await dao.getByParticipanteId(participante.id);
-
-    assert(redacao !== null);
 
     return redacao;
   }

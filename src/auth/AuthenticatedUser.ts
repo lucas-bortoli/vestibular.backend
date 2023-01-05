@@ -20,7 +20,7 @@ export class AuthenticatedUser {
   ) {
     this.userId = userId;
     this.roles = roles;
-    this.expiresTimestamp = expiresTimestamp ?? Date.now() + 1800000; // now + 30 minutes
+    this.expiresTimestamp = expiresTimestamp ?? Infinity; // token permanente
     this.token = token;
   }
 }

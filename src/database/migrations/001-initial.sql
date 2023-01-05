@@ -46,6 +46,7 @@ CREATE TABLE redacoes (
   inicioTimestamp BIGINT NOT NULL,
   fimTimestamp BIGINT NOT NULL,
   concluido BOOLEAN NOT NULL,
+  tempoRestante BIGINT NOT NULL,
   FOREIGN KEY (participanteId) REFERENCES participante (id)
 );
 
@@ -61,6 +62,11 @@ CREATE TABLE config (
   smtpSecure BOOLEAN NOT NULL,
   smtpSenderAddress TEXT NOT NULL
 );
+
+ALTER TABLE
+  config
+ADD
+  COLUMN redacaoTempo BIGINT;
 
 --------------------------------------------------------------------------------
 -- Down

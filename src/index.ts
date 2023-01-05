@@ -7,6 +7,7 @@ import { static as expressStatic } from "express";
 // Controllers
 import { ParticipanteController } from "./controller/ParticipanteController.js";
 import { RestritoController } from "./controller/RestritoController.js";
+import { RedacaoController } from "./controller/RedacaoController.js";
 import { CursoController } from "./controller/CursoController.js";
 
 import logger from "./logger.js";
@@ -16,7 +17,7 @@ import getAuthorizationManager from "./auth/AuthorizationManager.js";
 const app = createExpressServer({
   cors: true,
   routePrefix: "/api",
-  controllers: [CursoController, ParticipanteController, RestritoController],
+  controllers: [CursoController, ParticipanteController, RedacaoController, RestritoController],
   authorizationChecker: async (action: Action, roles: string[]) => {
     const token = action.request.headers["authorization"];
 

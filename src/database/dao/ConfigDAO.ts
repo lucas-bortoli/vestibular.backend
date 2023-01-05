@@ -21,6 +21,7 @@ export class ConfigDAO {
       smtpPassword: row.smtpPassword || "",
       smtpSecure: row.smtpSecure !== 0,
       smtpSenderAddress: row.smtpSenderAddress || "",
+      redacaoTempo: row.redacaoTempo || 0,
     };
   }
 
@@ -39,10 +40,11 @@ export class ConfigDAO {
           smtpUser,
           smtpPassword,
           smtpSecure,
-          smtpSenderAddress
+          smtpSenderAddress,
+          redacaoTempo
         )
       VALUES
-        (?, ?, ?, ?, ?, ?, ?, ?, ?);`
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`
     );
 
     await stmt.run([
@@ -55,6 +57,7 @@ export class ConfigDAO {
       config.smtpPassword,
       config.smtpSecure,
       config.smtpSenderAddress,
+      config.redacaoTempo,
     ]);
   }
 }

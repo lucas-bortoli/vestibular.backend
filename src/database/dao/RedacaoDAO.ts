@@ -12,6 +12,7 @@ export class RedacaoDAO {
     assert(typeof row.inicioTimestamp === "number");
     assert(typeof row.fimTimestamp === "number");
     assert(typeof row.concluido === "number");
+    assert(typeof row.tempoRestante === "number");
 
     return {
       participanteId: row.participanteId,
@@ -19,6 +20,7 @@ export class RedacaoDAO {
       inicioTimestamp: row.inicioTimestamp,
       fimTimestamp: row.fimTimestamp,
       concluido: row.concluido !== 0,
+      tempoRestante: row.tempoRestante,
     };
   }
 
@@ -54,15 +56,15 @@ export class RedacaoDAO {
    */
   async insertOrUpdate(redacao: RedacaoModel): Promise<RedacaoModel> {
     const stmt = await getDatabase().prepare(
-      `INSERT INTO redacoes (participanteId, corpo, inicioTimestamp, fimTimestamp, concluido)
-       VALUES (?, ?, ?, ?, ?)
-       ON CONFLICT REPLACE`,
+      `INSERT OR REPLACE INTO redacoes (participanteId, corpo, inicioTimestamp, fimTimestamp, concluido, tempoRestante)
+       VALUES (?, ?, ?, ?, ?, ?)`,
       [
         redacao.participanteId,
         redacao.corpo,
         redacao.inicioTimestamp,
         redacao.fimTimestamp,
         redacao.concluido,
+        redacao.tempoRestante,
       ]
     );
 

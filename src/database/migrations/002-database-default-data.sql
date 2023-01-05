@@ -55,19 +55,21 @@ INSERT INTO
         smtpUser,
         smtpPassword,
         smtpSecure,
-        smtpSenderAddress
+        smtpSenderAddress,
+        redacaoTempo
     )
 VALUES
     (
-        1672171925076,
-        1672179139992,
+        1672620815052,
+        1673225622094,
         '<h1>Configurar aplicação</h1><p>A aplicação não está configurada devidamente.</p>',
         'smtp.ethereal.email',
         587,
         'letha.stiedemann31@ethereal.email',
         'Bb8JksVvw6QtQVDrme',
         1,
-        'letha.stiedemann31@ethereal.email'
+        'letha.stiedemann31@ethereal.email',
+        60000
     );
 
 --------------------------------------------------------------------------------

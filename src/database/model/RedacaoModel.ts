@@ -1,3 +1,6 @@
+/**
+ * Representa uma redação.
+ */
 export interface RedacaoModel {
   /**
    * O participante a quem essas redação pertence
@@ -18,6 +21,11 @@ export interface RedacaoModel {
    * O timestamp em que a redação foi finalizada
    */
   fimTimestamp: number;
+
+  /**
+   * Quanto tempo ainda resta na redação, para ser entrege
+   */
+  tempoRestante: number;
 
   /**
    * Indica se a redação está concluída, o sistema não deve aceitar atualizações se estiver
