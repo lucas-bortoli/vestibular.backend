@@ -11,10 +11,12 @@ import {
   UseBefore,
 } from "routing-controllers";
 import getAuthorizationManager from "../auth/AuthorizationManager.js";
+import { ConfigDAO } from "../database/dao/ConfigDAO.js";
 import { NotasDAO } from "../database/dao/NotasDAO.js";
 import { ParticipanteDAO } from "../database/dao/ParticipanteDAO.js";
 import { RedacaoDAO } from "../database/dao/RedacaoDAO.js";
 import { UsuarioDAO } from "../database/dao/UsuarioDAO.js";
+import ConfigModel from "../database/model/ConfigModel.js";
 import NotasModel from "../database/model/NotasModel.js";
 import Usuario from "../database/model/UsuarioModel.js";
 
@@ -121,6 +123,9 @@ export class RestritoController {
     return true;
   }
 
+  /**
+   * Retorna a redação de um participante específico.
+   */
   @Get("/redacao/:participanteId")
   @Authorized()
   async retornarRedacaoParticipante(@Param("participanteId") participanteId: number) {
@@ -131,5 +136,19 @@ export class RestritoController {
     assert(redacao !== null, "Não há nenhuma redação enviada para este participante.");
 
     return redacao;
+  }
+
+  @Get("/config")
+  @Authorized()
+  async getConfig(): Promise<
+    Pick<ConfigModel, "processoSeletivoInicioUnix" | "processoSeletivoFimUnix" | "redacaoTempo">
+  > {
+    const config = await new ConfigDAO().getConfig();
+
+    return {
+      processoSeletivoInicioUnix: config.processoSeletivoInicioUnix,
+      processoSeletivoFimUnix: config.processoSeletivoFimUnix,
+      redacaoTempo: config.redacaoTempo,
+    };
   }
 }
