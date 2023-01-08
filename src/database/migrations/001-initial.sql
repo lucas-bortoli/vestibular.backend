@@ -68,6 +68,15 @@ ALTER TABLE
 ADD
   COLUMN redacaoTempo BIGINT;
 
+CREATE TABLE attachments (
+  id TEXT PRIMARY KEY,
+  nome TEXT NOT NULL,
+  dados BLOB NOT NULL,
+  tamanho INTEGER NOT NULL,
+  mime VARCHAR(64) NOT NULL,
+  modificado BIGINT NOT NULL
+);
+
 --------------------------------------------------------------------------------
 -- Down
 --------------------------------------------------------------------------------
@@ -82,3 +91,5 @@ DROP TABLE campus;
 DROP TABLE usuario;
 
 DROP TABLE config;
+
+DROP TABLE attachments;

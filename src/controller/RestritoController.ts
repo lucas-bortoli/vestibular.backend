@@ -1,4 +1,5 @@
 import assert from "assert";
+import Joi from "joi";
 import {
   Authorized,
   Body,
@@ -7,6 +8,7 @@ import {
   OnNull,
   Param,
   Post,
+  Put,
   UnauthorizedError,
   UseBefore,
 } from "routing-controllers";
@@ -138,17 +140,34 @@ export class RestritoController {
     return redacao;
   }
 
-  @Get("/config")
+  @Put("/config")
   @Authorized()
-  async getConfig(): Promise<
-    Pick<ConfigModel, "processoSeletivoInicioUnix" | "processoSeletivoFimUnix" | "redacaoTempo">
-  > {
-    const config = await new ConfigDAO().getConfig();
+  async putConfig(
+    @Body()
+    body: Pick<
+      ConfigModel,
+      "processoSeletivoInicioUnix" | "processoSeletivoFimUnix" | "redacaoTempo"
+    >
+  ): Promise<object> {
+    const validation = Joi.object({
+      processoSeletivoInicioUnix: Joi.number().required(),
+      processoSeletivoFimUnix: Joi.number()
+        .greater(Joi.ref("processoSeletivoInicioUnix"))
+        .required(),
+      redacaoTempo: Joi.number()
+        .greater(10 * 1000)
+        .required(),
+    }).validate(body);
 
-    return {
-      processoSeletivoInicioUnix: config.processoSeletivoInicioUnix,
-      processoSeletivoFimUnix: config.processoSeletivoFimUnix,
-      redacaoTempo: config.redacaoTempo,
-    };
+    if (validation.error) {
+      throw validation.error;
+    }
+
+    const dao = new ConfigDAO();
+    const config = await dao.getConfig();
+
+    await dao.setConfig(Object.assign({}, config, body));
+
+    return { success: true };
   }
 }

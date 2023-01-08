@@ -5,7 +5,6 @@ import ParticipanteModel from "../database/model/ParticipanteModel.js";
 import { LoggerMiddleware } from "../middleware/LoggerMiddleware.js";
 import { RedacaoDAO } from "../database/dao/RedacaoDAO.js";
 import { ConfigDAO } from "../database/dao/ConfigDAO.js";
-import dateInRange from "../utils/dateInRange.js";
 
 interface RedacaoAtualizarBody {
   corpo: string;
@@ -15,8 +14,18 @@ const getConfig = () => new ConfigDAO().getConfig();
 const verificarProcessoSeletivoAberto = async () => {
   const { processoSeletivoInicioUnix, processoSeletivoFimUnix } = await getConfig();
 
-  if (!dateInRange(Date.now(), processoSeletivoInicioUnix, processoSeletivoFimUnix)) {
-    throw new Error("O processo seletivo está finalizado.");
+  const now = Date.now();
+
+  if (now < processoSeletivoInicioUnix) {
+    throw new Error(
+      "O processo seletivo ainda não começou. Não é possível enviar uma redação neste momento."
+    );
+  }
+
+  if (now > processoSeletivoFimUnix) {
+    throw new Error(
+      "O processo seletivo está finalizado. Não é possível enviar uma redação neste momento."
+    );
   }
 
   return true;
@@ -65,8 +74,6 @@ export class RedacaoController {
     @Participante() participante: ParticipanteModel,
     @Body() body: RedacaoAtualizarBody
   ) {
-    await verificarProcessoSeletivoAberto();
-
     assert(typeof body.corpo === "string", "Parâmetro corpo inválido ou não existe.");
 
     const dao = new RedacaoDAO();
@@ -96,8 +103,6 @@ export class RedacaoController {
    */
   @Post("/concluir")
   public async concluirRedacao(@Participante() participante: ParticipanteModel) {
-    await verificarProcessoSeletivoAberto();
-
     const dao = new RedacaoDAO();
     const redacao = await dao.getByParticipanteId(participante.id);
 

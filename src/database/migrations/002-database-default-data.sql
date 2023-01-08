@@ -62,7 +62,7 @@ VALUES
     (
         1672620815052,
         1673225622094,
-        '<h1>Configurar aplicação</h1><p>A aplicação não está configurada devidamente.</p>',
+        '',
         'smtp.ethereal.email',
         587,
         'letha.stiedemann31@ethereal.email',
@@ -70,6 +70,18 @@ VALUES
         1,
         'letha.stiedemann31@ethereal.email',
         60000
+    );
+
+INSERT INTO
+    attachments (id, nome, tamanho, mime, modificado, dados)
+VALUES
+    (
+        "index",
+        "processo_seletivo_info.html",
+        0,
+        "text/html",
+        0,
+        "<h1>Configurar aplicação</h1><p>A aplicação não está configurada devidamente.</p>"
     );
 
 --------------------------------------------------------------------------------
