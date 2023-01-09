@@ -16,8 +16,16 @@ var $db: Database | null = null;
 export const init = async (): Promise<Database> => {
   logger.info("Inicializando banco de dados...");
 
+  let dbPath = "db.sqlite";
+
+  // Na produção, o banco está em /data/db.sqlite, de acordo com a configuração
+  // dos volumes no Docker
+  if (process.env.NODE_ENV === "production") {
+    dbPath = "/data/db.sqlite";
+  }
+
   $db = await open({
-    filename: "db.sqlite",
+    filename: dbPath,
     driver: sqlite3.Database,
   });
 
