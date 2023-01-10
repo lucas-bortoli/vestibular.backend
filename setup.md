@@ -116,3 +116,14 @@ Leve em consideração caracteres perigosos para o SQL no campos.
 >    senha_salt = '<salt>' 
 >   WHERE username = 'root';
 > ```
+
+## Documentos e painéis dentro do website
+![Screenshot da página inicial agora](https://i.imgur.com/RF1Mdp8.png)
+
+Acesse a seção restrita (link no fim da página). Faça login com um dos perfis criados anteriormente.
+
+![Dashboard da seção restrito](https://i.imgur.com/mhRqKPH.png)
+
+Coloque os arquivos apropriados em cada campo. Quando exportando arquivos do Word para HTML, **use o formato UTF-8 para a renderização correta nas páginas**.
+
+Na seção *Dados do processo seletivo*, coloque os prazos dos processos seletivos e o tempo da redação.
