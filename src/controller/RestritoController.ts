@@ -1,5 +1,6 @@
 import assert from "assert";
 import Joi from "joi";
+import { Response } from "express";
 import {
   Authorized,
   Body,
@@ -9,6 +10,7 @@ import {
   Param,
   Post,
   Put,
+  Res,
   UnauthorizedError,
   UseBefore,
 } from "routing-controllers";
@@ -23,6 +25,8 @@ import NotasModel from "../database/model/NotasModel.js";
 import Usuario from "../database/model/UsuarioModel.js";
 
 import { LoggerMiddleware } from "../middleware/LoggerMiddleware.js";
+
+import NotasExportService from "../services/NotasExport.js";
 
 interface LoginRequestBody {
   username?: unknown;
@@ -169,5 +173,21 @@ export class RestritoController {
     await dao.setConfig(Object.assign({}, config, body));
 
     return { success: true };
+  }
+
+  /**
+   * Exporta as notas como uma planilha de Excel.
+   */
+  @Get("/notas_export/xlsx")
+  @Authorized()
+  async notasExportXlsx(@Res() response: Response) {
+    const planilhaBuffer = await NotasExportService.doExport();
+
+    response.attachment("relação de notas.xlsx");
+    response.contentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    response.write(planilhaBuffer);
+    response.end();
+
+    return response;
   }
 }
