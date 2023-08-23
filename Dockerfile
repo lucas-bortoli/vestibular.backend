@@ -18,16 +18,15 @@ COPY --from=build /usr/bin/dumb-init /usr/bin/dumb-init
 RUN mkdir /data && chown node /data && chgrp node /data
 
 ENV NODE_ENV production
-USER node
 WORKDIR /usr/src/app
 
 # Instalar dependências
-COPY --chown=node:node --from=build /usr/src/app/package* /usr/src/app
+COPY --from=build /usr/src/app/package* /usr/src/app/
 RUN npm install --production
 
 # Copiar arquivos da aplicação
-COPY --chown=node:node --from=build /usr/src/app/build /usr/src/app/build 
-COPY --chown=node:node --from=build /usr/src/app/frontend/build /usr/src/app/public 
+COPY --from=build /usr/src/app/build /usr/src/app/build 
+COPY --from=build /usr/src/app/frontend/build /usr/src/app/public 
 
 # A aplicação usa a porta 8000 internamente
 EXPOSE 8000
